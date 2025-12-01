@@ -79,14 +79,18 @@
         <h1>Monthly Analysis Report</h1>
 
         <div class="filter-box">
-            <form action="/analysis" method="get">
+            <form method="get" action="/analysis">
                 <label>Month:</label>
                 <input type="number" name="month" th:value="${month}" min="1" max="12">
                 <label>Year:</label>
                 <input type="number" name="year" th:value="${year}" min="2000" max="2100">
                 <button type="submit">Generate Report</button>
+                <button type="submit" formaction="/analysis/export" formmethod="post"
+                    style="background-color: #27ae60;">Export to CSV</button>
             </form>
         </div>
+        <div th:if="${message}" style="color: green; margin-top: 10px; font-weight: bold;" th:text="${message}"></div>
+        <div th:if="${error}" style="color: red; margin-top: 10px; font-weight: bold;" th:text="${error}"></div>
 
         <table>
             <thead>

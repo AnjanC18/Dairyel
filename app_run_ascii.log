@@ -1,0 +1,11 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.0)
+
+2025-12-01T18:17:43.064+05:30  INFO 3396 --- [dairy-management] [           main] com.example.dairy.Main                   : Starting Main v0.0.1-SNAPSHOT using Java 25.0.1 with PID 3396 (C:\Users\anjan\.gemini\antigravity\scratch\dairy-management\target\dairy-management-0.0.1-SNAPSHOT.jar started by anjan in C:\Users\anjan\.gemini\antigravity\scratch\dairy-management)
+2025-12-01T18:17:43.067+05:30  INFO 3396 --- [dairy-management] [           main] com.example.dairy.Main                   : No active profile set, falling back to 1 default profile: "default"

@@ -5,22 +5,22 @@ public class MonthlyStats {
     private String cowName;
     private int month;
     private int year;
-    private double totalMilk;
-    private double morningMilk;
-    private double eveningMilk;
-    private double averageFat;
-    private int recordCount;
+    private Double totalMilk;
+    private Double morningMilk;
+    private Double eveningMilk;
+    private Double averageFat;
+    private long recordCount;
 
-    public MonthlyStats(int cowId, String cowName, int month, int year, double totalMilk,
-            double morningMilk, double eveningMilk, double averageFat, int recordCount) {
+    public MonthlyStats(int cowId, String cowName, int month, int year, Double totalMilk,
+            Double morningMilk, Double eveningMilk, Double averageFat, long recordCount) {
         this.cowId = cowId;
         this.cowName = cowName;
         this.month = month;
         this.year = year;
-        this.totalMilk = totalMilk;
-        this.morningMilk = morningMilk;
-        this.eveningMilk = eveningMilk;
-        this.averageFat = averageFat;
+        this.totalMilk = totalMilk != null ? totalMilk : 0.0;
+        this.morningMilk = morningMilk != null ? morningMilk : 0.0;
+        this.eveningMilk = eveningMilk != null ? eveningMilk : 0.0;
+        this.averageFat = averageFat != null ? averageFat : 0.0;
         this.recordCount = recordCount;
     }
 
@@ -57,7 +57,7 @@ public class MonthlyStats {
         return averageFat;
     }
 
-    public int getRecordCount() {
+    public long getRecordCount() {
         return recordCount;
     }
 }

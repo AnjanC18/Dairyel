@@ -1,14 +1,31 @@
 package com.example.dairy;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "cows")
 public class Cow {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cow_id")
     private int cowId;
+
+    @Column(nullable = false)
     private String name;
+
     private String breed;
+
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
     public Cow() {
+    }
+
+    public Cow(String name, String breed, LocalDate dateOfBirth) {
+        this.name = name;
+        this.breed = breed;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public Cow(int cowId, String name, String breed, LocalDate dateOfBirth) {

@@ -1,0 +1,52 @@
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.0)
+
+2025-12-01T18:51:59.483+05:30  INFO 4932 --- [dairy-management] [           main] com.example.dairy.Main                   : Starting Main v0.0.1-SNAPSHOT using Java 25.0.1 with PID 4932 (C:\Users\anjan\.gemini\antigravity\scratch\dairy-management\target\dairy-management-0.0.1-SNAPSHOT.jar started by anjan in C:\Users\anjan\.gemini\antigravity\scratch\dairy-management)
+2025-12-01T18:51:59.488+05:30  INFO 4932 --- [dairy-management] [           main] com.example.dairy.Main                   : No active profile set, falling back to 1 default profile: "default"
+2025-12-01T18:52:00.160+05:30  INFO 4932 --- [dairy-management] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-01T18:52:00.214+05:30  INFO 4932 --- [dairy-management] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 43 ms. Found 2 JPA repository interfaces.
+2025-12-01T18:52:00.833+05:30  INFO 4932 --- [dairy-management] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-12-01T18:52:00.847+05:30  INFO 4932 --- [dairy-management] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-12-01T18:52:00.847+05:30  INFO 4932 --- [dairy-management] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.24]
+2025-12-01T18:52:00.878+05:30  INFO 4932 --- [dairy-management] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-12-01T18:52:00.879+05:30  INFO 4932 --- [dairy-management] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1318 ms
+2025-12-01T18:52:00.915+05:30  INFO 4932 --- [dairy-management] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-12-01T18:52:01.134+05:30  INFO 4932 --- [dairy-management] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:dairy_management user=SA
+2025-12-01T18:52:01.139+05:30  INFO 4932 --- [dairy-management] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-12-01T18:52:01.153+05:30  INFO 4932 --- [dairy-management] [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:dairy_management'
+2025-12-01T18:52:01.297+05:30  INFO 4932 --- [dairy-management] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-01T18:52:01.361+05:30  INFO 4932 --- [dairy-management] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.2.Final
+2025-12-01T18:52:01.403+05:30  INFO 4932 --- [dairy-management] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-12-01T18:52:01.752+05:30  INFO 4932 --- [dairy-management] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-01T18:52:01.804+05:30  WARN 4932 --- [dairy-management] [           main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-12-01T18:52:02.602+05:30  INFO 4932 --- [dairy-management] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-12-01T18:52:02.642+05:30  INFO 4932 --- [dairy-management] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-01T18:52:03.006+05:30  WARN 4932 --- [dairy-management] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-01T18:52:03.034+05:30  INFO 4932 --- [dairy-management] [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2025-12-01T18:52:03.365+05:30  WARN 4932 --- [dairy-management] [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2025-12-01T18:52:03.369+05:30  INFO 4932 --- [dairy-management] [           main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-01T18:52:03.373+05:30  INFO 4932 --- [dairy-management] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-12-01T18:52:03.375+05:30  INFO 4932 --- [dairy-management] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-12-01T18:52:03.390+05:30  INFO 4932 --- [dairy-management] [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-12-01T18:52:03.406+05:30 ERROR 4932 --- [dairy-management] [           main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+

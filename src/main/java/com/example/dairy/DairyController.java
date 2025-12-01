@@ -3,20 +3,26 @@ package com.example.dairy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.sql.SQLException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 
 @Controller
 public class DairyController {
 
-    private final DairyDAO dao;
+    private final CowRepository cowRepository;
+    private final MilkProductionRepository productionRepository;
 
-    public DairyController() {
-        this.dao = new DairyDAO();
-        // Ensure DB is initialized
-        DatabaseConnection.initializeDatabase();
+    public DairyController(CowRepository cowRepository, MilkProductionRepository productionRepository) {
+        this.cowRepository = cowRepository;
+        this.productionRepository = productionRepository;
     }
 
     @GetMapping("/")
@@ -28,76 +34,58 @@ public class DairyController {
         if (year == null)
             year = LocalDate.now().getYear();
 
-        try {
-            List<MonthlyStats> stats = dao.getMonthlyAnalysis(month, year);
-            model.addAttribute("stats", stats);
+        List<MonthlyStats> stats = calculateMonthlyStats(month, year);
+        model.addAttribute("stats", stats);
 
-            // Calculate Dashboard Metrics
-            double totalProduction = stats.stream().mapToDouble(MonthlyStats::getTotalMilk).sum();
-            double overallAvgFat = stats.stream().mapToDouble(s -> s.getAverageFat() * s.getTotalMilk()).sum()
-                    / totalProduction;
-            if (Double.isNaN(overallAvgFat))
-                overallAvgFat = 0.0;
+        // Calculate Dashboard Metrics
+        double totalProduction = stats.stream().mapToDouble(MonthlyStats::getTotalMilk).sum();
+        double overallAvgFat = stats.stream().mapToDouble(s -> s.getAverageFat() * s.getTotalMilk()).sum()
+                / totalProduction;
+        if (Double.isNaN(overallAvgFat))
+            overallAvgFat = 0.0;
 
-            MonthlyStats topCow = stats.stream()
-                    .max((s1, s2) -> Double.compare(s1.getTotalMilk(), s2.getTotalMilk()))
-                    .orElse(null);
+        MonthlyStats topCow = stats.stream()
+                .max((s1, s2) -> Double.compare(s1.getTotalMilk(), s2.getTotalMilk()))
+                .orElse(null);
 
-            model.addAttribute("totalProduction", totalProduction);
-            model.addAttribute("overallAvgFat", overallAvgFat);
-            model.addAttribute("topCow", topCow);
-            model.addAttribute("month", month);
-            model.addAttribute("year", year);
+        model.addAttribute("totalProduction", totalProduction);
+        model.addAttribute("overallAvgFat", overallAvgFat);
+        model.addAttribute("topCow", topCow);
+        model.addAttribute("month", month);
+        model.addAttribute("year", year);
 
-        } catch (SQLException e) {
-            model.addAttribute("error", "Error loading dashboard: " + e.getMessage());
-        }
         return "index";
     }
 
     @GetMapping("/cows")
     public String viewCows(Model model) {
-        try {
-            List<Cow> cows = dao.getAllCows();
-            model.addAttribute("cows", cows);
-            model.addAttribute("newCow", new Cow(0, "", "", LocalDate.now()));
-        } catch (SQLException e) {
-            model.addAttribute("error", "Error fetching cows: " + e.getMessage());
-        }
+        List<Cow> cows = cowRepository.findAll();
+        model.addAttribute("cows", cows);
+        model.addAttribute("newCow", new Cow("", "", LocalDate.now()));
         return "cows";
     }
 
     @PostMapping("/cows/add")
     public String addCow(@ModelAttribute Cow cow) {
-        try {
-            dao.addCow(cow);
-        } catch (SQLException e) {
-            return "redirect:/cows?error=" + e.getMessage();
-        }
+        cowRepository.save(cow);
         return "redirect:/cows";
     }
 
     @PostMapping("/cows/delete/{id}")
     public String deleteCow(@PathVariable int id) {
-        try {
-            dao.deleteCow(id);
-        } catch (SQLException e) {
-            return "redirect:/cows?error=" + e.getMessage();
-        }
+        // Delete production records first (manual cascade if not handled by DB)
+        productionRepository.deleteByCowId(id);
+        cowRepository.deleteById(id);
         return "redirect:/cows";
     }
 
     @GetMapping("/production")
     public String viewProduction(@RequestParam(required = false) String date, Model model) {
         LocalDate viewDate = (date == null || date.isEmpty()) ? LocalDate.now() : LocalDate.parse(date);
-        try {
-            List<MilkProductionRecord> records = dao.getDailyProduction(viewDate);
-            model.addAttribute("records", records);
-            model.addAttribute("viewDate", viewDate);
-            model.addAttribute("cows", dao.getAllCows()); // For the dropdown
-        } catch (SQLException e) {
-            model.addAttribute("error", "Error fetching data: " + e.getMessage());
-        }
+        List<MilkProductionRecord> records = productionRepository.findByProductionDate(viewDate);
+        model.addAttribute("records", records);
+        model.addAttribute("viewDate", viewDate);
+        model.addAttribute("cows", cowRepository.findAll()); // For the dropdown
         return "production";
     }
 
@@ -110,14 +98,10 @@ public class DairyController {
             @RequestParam double fatContent,
             @RequestParam double temperature) {
 
-        try {
-            String quality = calculateQuality(fatContent, temperature);
-            MilkProductionRecord record = new MilkProductionRecord(0, cowId, LocalDate.parse(date), shift, quantity,
-                    fatContent, temperature, quality);
-            dao.recordProduction(record);
-        } catch (SQLException e) {
-            return "redirect:/production?error=" + e.getMessage();
-        }
+        String quality = calculateQuality(fatContent, temperature);
+        MilkProductionRecord record = new MilkProductionRecord(cowId, LocalDate.parse(date), shift, quantity,
+                fatContent, temperature, quality);
+        productionRepository.save(record);
         return "redirect:/production?date=" + date;
     }
 
@@ -130,15 +114,81 @@ public class DairyController {
         if (year == null)
             year = LocalDate.now().getYear();
 
-        try {
-            List<MonthlyStats> stats = dao.getMonthlyAnalysis(month, year);
-            model.addAttribute("stats", stats);
-            model.addAttribute("month", month);
-            model.addAttribute("year", year);
-        } catch (SQLException e) {
-            model.addAttribute("error", "Error generating report: " + e.getMessage());
-        }
+        List<MonthlyStats> stats = calculateMonthlyStats(month, year);
+
+        model.addAttribute("stats", stats);
+        model.addAttribute("month", month);
+        model.addAttribute("year", year);
         return "analysis";
+    }
+
+    @PostMapping("/analysis/export")
+    public String exportAnalysis(@RequestParam(required = false) Integer month,
+            @RequestParam(required = false) Integer year,
+            RedirectAttributes redirectAttributes) {
+        if (month == null)
+            month = LocalDate.now().getMonthValue();
+        if (year == null)
+            year = LocalDate.now().getYear();
+
+        List<MonthlyStats> stats = calculateMonthlyStats(month, year);
+
+        String folderPath = "D:\\Documents\\DairyReport";
+        String fileName = "Monthly_Report_" + month + "_" + year + ".csv";
+        Path path = Paths.get(folderPath);
+
+        try {
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+            }
+
+            try (PrintWriter writer = new PrintWriter(new FileWriter(Paths.get(folderPath, fileName).toFile()))) {
+                writer.println("Cow Name,Total Milk (L),Morning (L),Evening (L),Avg Fat %,Records");
+                for (MonthlyStats stat : stats) {
+                    writer.printf("%s,%.2f,%.2f,%.2f,%.2f,%d%n",
+                            stat.getCowName(),
+                            stat.getTotalMilk(),
+                            stat.getMorningMilk(),
+                            stat.getEveningMilk(),
+                            stat.getAverageFat(),
+                            stat.getRecordCount());
+                }
+            }
+
+            redirectAttributes.addFlashAttribute("message",
+                    "Report exported successfully to " + folderPath + "\\" + fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Failed to export report: " + e.getMessage());
+        }
+
+        return "redirect:/analysis?month=" + month + "&year=" + year;
+    }
+
+    private List<MonthlyStats> calculateMonthlyStats(int month, int year) {
+        System.out.println("Calculating stats for Month: " + month + ", Year: " + year);
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+
+        List<MilkProductionRecord> records = productionRepository.findByProductionDateBetween(startDate, endDate);
+        List<Cow> cows = cowRepository.findAll();
+
+        return cows.stream().map(cow -> {
+            List<MilkProductionRecord> cowRecords = records.stream()
+                    .filter(r -> r.getCowId() == cow.getCowId())
+                    .toList();
+
+            double totalMilk = cowRecords.stream().mapToDouble(MilkProductionRecord::getQuantity).sum();
+            double morningMilk = cowRecords.stream().filter(r -> "Morning".equals(r.getShift()))
+                    .mapToDouble(MilkProductionRecord::getQuantity).sum();
+            double eveningMilk = cowRecords.stream().filter(r -> "Evening".equals(r.getShift()))
+                    .mapToDouble(MilkProductionRecord::getQuantity).sum();
+            double avgFat = cowRecords.stream().mapToDouble(MilkProductionRecord::getFatContent).average().orElse(0.0);
+            long count = cowRecords.size();
+
+            return new MonthlyStats(cow.getCowId(), cow.getName(), month, year, totalMilk, morningMilk, eveningMilk,
+                    avgFat, count);
+        }).toList();
     }
 
     private String calculateQuality(double fat, double temp) {
