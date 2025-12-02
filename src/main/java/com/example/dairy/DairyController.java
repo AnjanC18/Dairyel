@@ -67,7 +67,9 @@ public class DairyController {
 
     @PostMapping("/cows/add")
     public String addCow(@ModelAttribute Cow cow) {
-        cowRepository.save(cow);
+        if (cow != null) {
+            cowRepository.save(cow);
+        }
         return "redirect:/cows";
     }
 
