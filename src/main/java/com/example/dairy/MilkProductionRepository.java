@@ -11,6 +11,7 @@ import java.util.List;
 public interface MilkProductionRepository extends JpaRepository<MilkProductionRecord, Integer> {
     List<MilkProductionRecord> findByProductionDate(LocalDate productionDate);
 
+    @org.springframework.transaction.annotation.Transactional
     void deleteByCowId(int cowId);
 
     List<MilkProductionRecord> findByProductionDateBetween(LocalDate startDate, LocalDate endDate);
