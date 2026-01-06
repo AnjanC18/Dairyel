@@ -117,7 +117,7 @@
         <div
             style="background: #fff8e1; padding: 20px; border-radius: 5px; margin-bottom: 30px; border: 1px solid #ffe0b2;">
             <h2>Record New Entry</h2>
-            <form action="/production/add" method="post">
+            <form th:action="@{/production/add}" method="post">
                 <input type="hidden" name="date" th:value="${viewDate}">
 
                 <div class="form-row">

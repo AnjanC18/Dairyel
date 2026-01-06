@@ -175,7 +175,7 @@
         <!-- Add Cow Form -->
         <div class="form-card">
             <h2>Add New Cow</h2>
-            <form action="/cows/add" method="post" th:object="${newCow}">
+            <form th:action="@{/cows/add}" method="post" th:object="${newCow}">
                 <div class="form-group">
                     <label>Name:</label>
                     <input type="text" name="name" placeholder="e.g. Gauri" required>

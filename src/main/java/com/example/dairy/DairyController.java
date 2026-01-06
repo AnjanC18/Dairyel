@@ -25,6 +25,11 @@ public class DairyController {
         this.productionRepository = productionRepository;
     }
 
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
     @GetMapping("/")
     public String home(@RequestParam(required = false) Integer month,
             @RequestParam(required = false) Integer year,

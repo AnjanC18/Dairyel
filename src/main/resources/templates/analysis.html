@@ -79,44 +79,48 @@
         <h1>Monthly Analysis Report</h1>
 
         <div class="filter-box">
-            <form method="get" action="/analysis">
+            <form method="get" action="/analysis" style="display: inline-flex; gap: 10px; align-items: center;">
                 <label>Month:</label>
                 <input type="number" name="month" th:value="${month}" min="1" max="12">
                 <label>Year:</label>
                 <input type="number" name="year" th:value="${year}" min="2000" max="2100">
                 <button type="submit">Generate Report</button>
-                <button type="submit" formaction="/analysis/export" formmethod="post"
-                    style="background-color: #27ae60;">Export to CSV</button>
+            </form>
+            <form th:action="@{/analysis/export}" method="post" style="display: inline-flex; margin-left: 10px;">
+                <input type="hidden" name="month" th:value="${month}">
+                <input type="hidden" name="year" th:value="${year}">
+                <button type="submit" style="background-color: #27ae60;">Export to CSV</button>
             </form>
         </div>
-        <div th:if="${message}" style="color: green; margin-top: 10px; font-weight: bold;" th:text="${message}"></div>
-        <div th:if="${error}" style="color: red; margin-top: 10px; font-weight: bold;" th:text="${error}"></div>
+    </div>
+    <div th:if="${message}" style="color: green; margin-top: 10px; font-weight: bold;" th:text="${message}"></div>
+    <div th:if="${error}" style="color: red; margin-top: 10px; font-weight: bold;" th:text="${error}"></div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Cow Name</th>
-                    <th>Total Milk (L)</th>
-                    <th>Morning (L)</th>
-                    <th>Evening (L)</th>
-                    <th>Avg Fat %</th>
-                    <th>Records</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="stat : ${stats}">
-                    <td th:text="${stat.cowName}" style="font-weight: bold;">Ganga</td>
-                    <td th:text="${#numbers.formatDecimal(stat.totalMilk, 1, 2)}">150.00</td>
-                    <td th:text="${#numbers.formatDecimal(stat.morningMilk, 1, 2)}">80.00</td>
-                    <td th:text="${#numbers.formatDecimal(stat.eveningMilk, 1, 2)}">70.00</td>
-                    <td th:text="${#numbers.formatDecimal(stat.averageFat, 1, 2)} + '%'">4.20%</td>
-                    <td th:text="${stat.recordCount}">30</td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(stats)}">
-                    <td colspan="6" style="text-align: center; padding: 20px;">No data found for this period.</td>
-                </tr>
-            </tbody>
-        </table>
+    <table>
+        <thead>
+            <tr>
+                <th>Cow Name</th>
+                <th>Total Milk (L)</th>
+                <th>Morning (L)</th>
+                <th>Evening (L)</th>
+                <th>Avg Fat %</th>
+                <th>Records</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="stat : ${stats}">
+                <td th:text="${stat.cowName}" style="font-weight: bold;">Ganga</td>
+                <td th:text="${#numbers.formatDecimal(stat.totalMilk, 1, 2)}">150.00</td>
+                <td th:text="${#numbers.formatDecimal(stat.morningMilk, 1, 2)}">80.00</td>
+                <td th:text="${#numbers.formatDecimal(stat.eveningMilk, 1, 2)}">70.00</td>
+                <td th:text="${#numbers.formatDecimal(stat.averageFat, 1, 2)} + '%'">4.20%</td>
+                <td th:text="${stat.recordCount}">30</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(stats)}">
+                <td colspan="6" style="text-align: center; padding: 20px;">No data found for this period.</td>
+            </tr>
+        </tbody>
+    </table>
     </div>
 </body>
 
