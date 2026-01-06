@@ -2,7 +2,8 @@ $ErrorActionPreference = "Stop"
 
 $minGitVersion = "2.43.0"
 $minGitUrl = "https://github.com/git-for-windows/git/releases/download/v$minGitVersion.windows.1/MinGit-$minGitVersion-64-bit.zip"
-$installDir = "c:\Users\anjan\.gemini\antigravity\scratch\dairy-management\tools"
+$projectRoot = $PSScriptRoot
+$installDir = Join-Path $projectRoot "tools"
 $gitHome = "$installDir\MinGit"
 $gitBin = "$gitHome\cmd"
 
